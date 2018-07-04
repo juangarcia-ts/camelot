@@ -113,9 +113,9 @@ angular
         ReadableProcess.prototype.setActorColor = function (actor, color) {
             let index = this.actors.indexOf(actor);
 
-            //console.log("chegou:");
-            //console.log(actor);
-            //console.log(color);
+            console.log("chegou:");
+            console.log(actor);
+            console.log(color);
 
             if (index != -1) {
                 for(let task of this.getTasksByActor(this.actors[index])){

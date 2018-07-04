@@ -21,20 +21,6 @@ angular
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 angular
     .module('myApp.directives')

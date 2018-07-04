@@ -40,8 +40,6 @@ angular
             if (index != -1) {
                 this.comment[index] = newComment;
             }
-
-
         }
 
         ReadableTask.prototype.getDefinition = function () {
@@ -69,7 +67,6 @@ angular
         ReadableTask.prototype.setID = function(newID){
             this.id = newID;
         }
-
 
         function ReadableTask(newActor, newTaskDefinition, id, newComment, newColor) {
             this.actor = newActor;

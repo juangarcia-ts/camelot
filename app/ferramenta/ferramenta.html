@@ -1,4 +1,4 @@
-<div ng-controller="FerramentaCtrl as $ctrl" id="main-content" class="container">
+<div id="main-content" class="container">
 
     <div id="app-description">  
         <div class="row">
@@ -89,7 +89,7 @@
                               <i class="material-icons" id="visibility-icon">visibility_off</i><p class="inline">Esconder tarefas</p>
                             </div>
                             <div class="col-md-6">
-                              <div colorpicker class="colorpicker clickable center inline" style="width: 12%; height: 3.5%; display: inline-block; margin-right: 1%; background-color: {{ color }}; border: 1px solid grey;" ng-model="color" actor="{{ actor }}"/>
+                              <div colorpicker class="colorpicker clickable center inline" style="width: 12%; height: 3.5%; display: inline-block; margin-right: 1%; background-color: {{ color }}; border: 1px solid grey;" ng-model="color" ng-change="setActor(actor, color)"/>
                               <p class="inline"> Escolher cor</p>
                             </div>
                           </div>
