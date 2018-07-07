@@ -99,14 +99,14 @@
                                 <i id="deleteActor" class="material-icons">delete</i><p class="inline"> Excluir ator</p>
                             </div>                        
                             <div ng-click="openActorName(readableProcess, actor)" class="clickable col-md-6 modal-demo">
-                                <i class="material-icons">edit</i><p class="inline"> Editar nome</p>
+                                <i class="material-icons">edit</i><p class="inline">Editar nome</p>
                                 <script type="text/ng-template" id="myModalActorName.html">
                                     <div class="modal-window">
                                         <div class="modal-header">
                                             <h3 class="modal-title" id="modal-actor-name">Alterar nome do ator {{ actor }}</h3>
                                         </div>
                                         <div class="modal-body" id="modal-body-actor-name">
-                                            <input type="text" value="{{actor}}" ng-model="newActorName">
+                                            <input type="text" ng-value="actor" ng-model="newActorName">
                                         </div>
                                         <div class="modal-footer">
                                             <button class="btn btn-primary blue-button" type="button" ng-click="$ctrl.ok('actorName')">OK</button>
@@ -253,7 +253,7 @@
                     </button>
                 </a>
                 <div class="well well-lg drawing">
-                    <canvas id="processCanvas" width="100px" height="500px"></canvas>
+                    <canvas id="processCanvas"></canvas>
                 </div>
 
             </div>
@@ -268,9 +268,9 @@
 		  <div id="inner-disabled">
           <div class="row">
               <h2 class="col-md-9" style="color: #FFF; padding: 2%;">Tarefas desabilitadas</h2>
-              <button style="margin: 3% 3% 0% 0%" class="col-md-2 btn btn-primary pull-right disabledToggler blue-button" type="button" status="hidden">
+              <!-- <button style="margin: 3% 3% 0% 0%" class="col-md-2 btn btn-primary pull-right disabledToggler blue-button" type="button" status="hidden">
                   Mostrar tarefas desabilitadas
-              </button>
+              </button> -->
           </div>
 
                 <div class="tasks" ng-repeat="readableTask in readableProcess.getDisabledTasks()">

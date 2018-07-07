@@ -289,7 +289,7 @@ angular.module('myApp.ferramenta', ['ngRoute', 'myApp.factories', "ui.bootstrap"
     var $ctrl = this;
 
     $scope.newActor = null;
-    $scope.newDefinition = null;
+    $scope.newDefinition = readableTask.getDefinition();
     $scope.commentType = 'remark';
     $scope.newComment = null;
 
@@ -325,7 +325,7 @@ angular.module('myApp.ferramenta', ['ngRoute', 'myApp.factories', "ui.bootstrap"
   .controller('ProcessModalInstanceCtrl', function ($scope, $uibModalInstance, readableProcess) {
     var $ctrl = this;
 
-    $scope.newActorName = null;
+    $scope.newActorName = $scope.oldActorName;
 
     $ctrl.ok = function (thingToAdd) {
 

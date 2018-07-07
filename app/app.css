@@ -363,7 +363,7 @@ a:hover {
 
 .modal-content {
     background-color: #fff;
-    margin: 15% auto; /* 15% from the top and centered */
+    margin: 5% 10% auto; /* 15% from the top and centered */
     padding: 1em;
     border: 10px solid #385b94;
     border-radius: 35px;
@@ -373,8 +373,8 @@ a:hover {
 }
 
 #canvasModal .modal-content {
-    width: 75em;
-    height: 44em;
+    width: 80em;
+    height: 55em;
 }
 .drawing {
     margin-top: 30px;
