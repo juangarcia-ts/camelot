@@ -14,7 +14,7 @@ angular.module('myApp.ferramenta', ['ngRoute', 'myApp.factories', "ui.bootstrap"
       //$scope.content = content;
       var x2js = new X2JS();
       var json = x2js.xml_str2json(content);
-      console.log(json.Package/*.WorkflowProcess.Activities*/);
+      //console.log(json.Package/*.WorkflowProcess.Activities*/);
 
       if (Array.isArray(json.Package.Pools.Pool)) {
         var lanes = json.Package.Pools.Pool[1].Lanes;

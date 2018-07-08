@@ -121,10 +121,6 @@ angular
     ReadableProcess.prototype.setActorColor = function (actor, color) {
       let index = this.actors.indexOf(actor);
 
-      console.log("chegou:");
-      console.log(actor);
-      console.log(color);
-
       if (index != -1) {
         for (let task of this.getTasksByActor(this.actors[index])) {
           task.setColor(color);
@@ -234,6 +230,8 @@ angular
       var widthCanvas = 150;
       var heightCanvas = 650;
 
+      var initialTaskHeight = taskHeight;
+
       if (tasks.length > 0) {
         $(".drawing").css("overflow", "scroll");
 
@@ -248,25 +246,25 @@ angular
       context.fillRect(0, 0, widthCanvas, heightCanvas);
 
       for (let task of tasks) {
-        context.font="bold 15px Arial";
+        context.font = "bold 15px Arial";
         var textCount = 0;
         taskIndex++;
 
-        let actor = task.getActor(0);       
+        let actor = task.getActor(0);
 
         let actorName = actor.split(' ');
-        
+
         if ((actor == null) || (actor == "")) {
           actor = "Nenhum ator!";
         }
 
         if (actorName.length >= 3 || (actorName.length == 2 && actorName[0].length + actorName[1].length > 10)) {
           for (let i = 0; i < actorName.length; i++) {
-            textCount += actorName[i].length;  
-          }  
-  
+            textCount += actorName[i].length;
+          }
+
           textCount -= 10;
-        } 
+        }
 
         let comments = task.getAllComment();
         context.fillStyle = "#FFFFFF";
@@ -286,31 +284,70 @@ angular
         context.closePath();
 
         context.fillStyle = "#FFFFFF";
-        
+
         if (actorName.length == 1 || actorName.length == 2 && (actorName[0].length + actorName[1].length <= 10)) {
           roundRect(context, coordinateX, coordinateY, actorWidth, actorHeight, 12, true, true, task.getColor());
-          context.fillStyle = "#111111";
+          if (isTooDark(task.getColor())){
+            context.fillStyle = "#FFFFFF";
+          } else {
+            context.fillStyle = "#111111";
+          } 
           context.fillText(actor, coordinateX + 10, coordinateY + 13);
-        } else {  
+        } else {
           roundRect(context, coordinateX, coordinateY, actorWidth + (textCount * 15), actorHeight, 12, true, true, task.getColor());
-          context.fillStyle = "#111111";
+          if (isTooDark(task.getColor())){
+            context.fillStyle = "#FFFFFF";
+          } else {
+            context.fillStyle = "#111111";
+          } 
           context.fillText(actor, coordinateX + 10, coordinateY + 13);
         }
 
-        coordinateY += actorHeight + spaceBetweenBoxes;    
+        coordinateY += actorHeight + spaceBetweenBoxes;
         coordinateX += textCount * 15;
 
+        var words = task.getDefinition().split(' ');
+        var line = '';
+        var height = 0;
+        let linesNumber = -0.5;
+
+        for (let n = 0; n < words.length; n += 2) {
+          let fstWordWidth = context.measureText(line + words[n] + ' ').width;
+          let sndWordWidth = context.measureText(line + words[n + 1] + ' ').width;
+
+          if (fstWordWidth + sndWordWidth < maxTextWidth) {
+            linesNumber += 1;
+          } else {
+            linesNumber += 2;
+          }
+        }
+
+        // console.log("Lines: " + linesNumber);
+        // console.log("Task Height: " + taskHeight);
+        // console.log("Height: " + linesNumber * textHeight);
+
+        if (taskHeight < linesNumber * textHeight) {
+          taskHeight = linesNumber * textHeight + 15;
+        }
+
         context.fillStyle = "#FFFFFF";
+
         roundRect(context, coordinateX - textCount * 7.5, coordinateY, taskWidth, taskHeight, 15, true, true, task.getColor());
-        context.fillStyle = "#111111";
+
+        if (isTooDark(task.getColor())){
+          context.fillStyle = "#FFFFFF";
+        } else {
+          context.fillStyle = "#111111";
+        }        
+
         this.wrapText(context, task.getDefinition(), coordinateX + 10 - textCount * 7.5, coordinateY + 20, maxTextWidth, textHeight);
 
         if (taskIndex != this.tasks.length) {
-          arrow(context, coordinateX + 10 + taskWidth, coordinateY + taskHeight / 2 + 5);
+          arrow(context, coordinateX + 10 + taskWidth, coordinateY + initialTaskHeight / 2 + 5);
         }
 
-        for (let comment of comments) {          
-          context.font="14px Arial";
+        for (let comment of comments) {
+          context.font = "14px Arial";
 
           if ((comment != null) && (comment.getText() != "")) {
             coordinateY += taskHeight + spaceBetweenBoxes;
@@ -342,14 +379,14 @@ angular
                 commentHeight += 10;
               }
             }
-            
+
             context.strokeRect(coordinateX - textCount * 7.5, coordinateY, commentWidth, commentHeight);
             context.fillRect(coordinateX - textCount * 7.5, coordinateY, commentWidth, commentHeight);
 
             context.setLineDash([]);
             context.fillStyle = "#111111";
             //context.fillText(comment, coordinateX + 10, coordinateY + 15);
-            this.wrapText(context, commentText, coordinateX + 10 - textCount * 7.5, coordinateY + 15, maxTextWidth, textHeight);            
+            this.wrapText(context, commentText, coordinateX + 10 - textCount * 7.5, coordinateY + 15, maxTextWidth, textHeight);
           }
 
           coordinateY += commentHeight - taskHeight;
@@ -357,10 +394,27 @@ angular
         }
 
         coordinateY = 50;
-        coordinateX += 180;        
+        coordinateX += 180;
         textCount = 0;
+        taskHeight = initialTaskHeight;
       }
 
+    }
+
+    var isTooDark = function (c) {
+      var c = c.substring(1);      // strip #
+      var rgb = parseInt(c, 16);   // convert rrggbb to decimal
+      var r = (rgb >> 16) & 0xff;  // extract red
+      var g = (rgb >> 8) & 0xff;  // extract green
+      var b = (rgb >> 0) & 0xff;  // extract blue
+
+      var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
+
+      if (luma < 40) {
+        return true;
+      }
+
+      return false;
     }
 
     ReadableProcess.prototype.wrapText = function (context, text, x, y, maxWidth, lineHeight) {
@@ -369,12 +423,8 @@ angular
 
       for (let n = 0; n < words.length; n++) {
         let testLine = line + words[n] + ' ';
-        let metrics = context.measureText(testLine);        
+        let metrics = context.measureText(testLine);
         let testWidth = metrics.width;
-
-        console.log("Metrics: " + metrics);
-        console.log("TestWidth: " + testWidth);
-        console.log("MaxWidth: " + maxWidth);
 
         if (testWidth > maxWidth && n > 0) {
           context.fillText(line, x, y);
@@ -385,6 +435,7 @@ angular
           line = testLine;
         }
       }
+
       context.fillText(line, x, y);
     }
 
